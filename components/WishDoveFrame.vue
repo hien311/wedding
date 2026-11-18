@@ -16,11 +16,11 @@ const active = ref<Wish | null>(null)
 const usedIds = ref<string[]>([])
 
 const doves = [
-  { id: 1, anim: 'fly-a', duration: '16s', delay: '0s', scale: 1 },
-  { id: 2, anim: 'fly-b', duration: '18s', delay: '-3.5s', scale: 0.92 },
-  { id: 3, anim: 'fly-c', duration: '15s', delay: '-7s', scale: 1.05 },
-  { id: 4, anim: 'fly-d', duration: '19s', delay: '-10s', scale: 0.96 },
-  { id: 5, anim: 'fly-e', duration: '17s', delay: '-13s', scale: 1 },
+  { id: 1, anim: 'fly-a', duration: '8s', delay: '0s', scale: 1.15 },
+  { id: 2, anim: 'fly-b', duration: '9s', delay: '-1.6s', scale: 1.1 },
+  { id: 3, anim: 'fly-c', duration: '7.5s', delay: '-3.2s', scale: 1.2 },
+  { id: 4, anim: 'fly-d', duration: '8.5s', delay: '-4.8s', scale: 1.12 },
+  { id: 5, anim: 'fly-e', duration: '9.5s', delay: '-6.4s', scale: 1.18 },
 ]
 
 function pickWish(): Wish | null {
@@ -189,22 +189,20 @@ onBeforeUnmount(() => window.removeEventListener('keydown', onKey))
 
 .dove {
   position: absolute;
-  top: 0;
-  left: 0;
-  width: clamp(72px, 20vw, 104px);
+  width: clamp(96px, 26vw, 140px);
   border: 0;
   background: none;
   z-index: 4;
   /* hit area rộng hơn sprite */
   padding: 8px;
   margin: -8px;
-  transform: scale(var(--scale));
+  /* left/top % theo khung trời — KHÔNG dùng translate % (bị tính theo size chim) */
   animation-duration: var(--duration);
   animation-delay: var(--delay);
   animation-timing-function: linear;
   animation-iteration-count: infinite;
   filter: drop-shadow(2px 3px 0 rgba(26, 47, 36, 0.25));
-  will-change: translate;
+  will-change: left, top;
 }
 
 .dove img {
@@ -214,6 +212,8 @@ onBeforeUnmount(() => window.removeEventListener('keydown', onKey))
   background: transparent;
   image-rendering: pixelated;
   image-rendering: crisp-edges;
+  transform: scale(var(--scale));
+  transform-origin: center center;
   animation: flap 0.28s steps(2) infinite;
 }
 
@@ -222,7 +222,11 @@ onBeforeUnmount(() => window.removeEventListener('keydown', onKey))
   z-index: 5;
 }
 
-.dove:not(:disabled):active {
+.dove:not(:disabled):hover img {
+  transform: scale(calc(var(--scale) * 1.06));
+}
+
+.dove:not(:disabled):active img {
   transform: scale(calc(var(--scale) * 0.94));
 }
 
@@ -314,117 +318,126 @@ onBeforeUnmount(() => window.removeEventListener('keydown', onKey))
   }
 }
 
-/* Mỗi chim giữ 1 “vùng” trên map, bay quanh vùng đó + đôi lúc chạm cạnh khung */
+/*
+  left/top theo % khung trời.
+  max ~78%/72% để chim to không tràn mép.
+*/
 @keyframes fly-a {
-  /* góc trên-trái → cạnh trên → trái giữa */
   0% {
-    translate: 2% 8%;
+    left: 2%;
+    top: 4%;
   }
-  20% {
-    translate: 28% 4%;
+  25% {
+    left: 38%;
+    top: 10%;
   }
-  40% {
-    translate: 18% 22%;
+  50% {
+    left: 72%;
+    top: 3%;
   }
-  60% {
-    translate: 4% 30%;
-  }
-  80% {
-    translate: 12% 12%;
+  75% {
+    left: 42%;
+    top: 14%;
   }
   100% {
-    translate: 2% 8%;
+    left: 2%;
+    top: 4%;
   }
 }
 
 @keyframes fly-b {
-  /* góc trên-phải */
   0% {
-    translate: 72% 6%;
+    left: 78%;
+    top: 2%;
   }
-  20% {
-    translate: 88% 18%;
+  25% {
+    left: 70%;
+    top: 30%;
   }
-  40% {
-    translate: 70% 28%;
+  50% {
+    left: 78%;
+    top: 56%;
   }
-  60% {
-    translate: 58% 10%;
-  }
-  80% {
-    translate: 80% 4%;
+  75% {
+    left: 66%;
+    top: 74%;
   }
   100% {
-    translate: 72% 6%;
+    left: 78%;
+    top: 2%;
   }
 }
 
 @keyframes fly-c {
-  /* giữa khung, bay rộng */
   0% {
-    translate: 38% 36%;
+    left: 10%;
+    top: 22%;
   }
-  16% {
-    translate: 52% 48%;
+  20% {
+    left: 48%;
+    top: 36%;
   }
-  32% {
-    translate: 44% 58%;
+  40% {
+    left: 72%;
+    top: 52%;
   }
-  48% {
-    translate: 28% 46%;
-  }
-  64% {
-    translate: 36% 32%;
+  60% {
+    left: 46%;
+    top: 70%;
   }
   80% {
-    translate: 50% 38%;
+    left: 16%;
+    top: 48%;
   }
   100% {
-    translate: 38% 36%;
+    left: 10%;
+    top: 22%;
   }
 }
 
 @keyframes fly-d {
-  /* góc dưới-trái */
   0% {
-    translate: 4% 68%;
+    left: 4%;
+    top: 74%;
   }
-  20% {
-    translate: 22% 78%;
+  25% {
+    left: 34%;
+    top: 66%;
   }
-  40% {
-    translate: 30% 62%;
+  50% {
+    left: 64%;
+    top: 76%;
   }
-  60% {
-    translate: 10% 54%;
-  }
-  80% {
-    translate: 6% 74%;
+  75% {
+    left: 36%;
+    top: 62%;
   }
   100% {
-    translate: 4% 68%;
+    left: 4%;
+    top: 74%;
   }
 }
 
 @keyframes fly-e {
-  /* góc dưới-phải */
   0% {
-    translate: 70% 66%;
+    left: 2%;
+    top: 10%;
   }
-  20% {
-    translate: 86% 74%;
+  25% {
+    left: 8%;
+    top: 34%;
   }
-  40% {
-    translate: 78% 54%;
+  50% {
+    left: 1%;
+    top: 56%;
   }
-  60% {
-    translate: 58% 70%;
-  }
-  80% {
-    translate: 74% 80%;
+  75% {
+    left: 12%;
+    top: 76%;
   }
   100% {
-    translate: 70% 66%;
+    left: 2%;
+    top: 10%;
   }
 }
 
@@ -452,19 +465,24 @@ onBeforeUnmount(() => window.removeEventListener('keydown', onKey))
   }
 
   .dove.fly-a {
-    translate: 8% 12%;
+    left: 20%;
+    top: 8%;
   }
   .dove.fly-b {
-    translate: 76% 10%;
+    left: 76%;
+    top: 30%;
   }
   .dove.fly-c {
-    translate: 42% 42%;
+    left: 40%;
+    top: 45%;
   }
   .dove.fly-d {
-    translate: 10% 70%;
+    left: 30%;
+    top: 76%;
   }
   .dove.fly-e {
-    translate: 74% 72%;
+    left: 4%;
+    top: 50%;
   }
 }
 </style>
