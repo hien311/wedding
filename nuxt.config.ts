@@ -1,6 +1,6 @@
 // https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
-  compatibilityDate: '2024-11-01',
+  compatibilityDate: '2025-03-20',
   devtools: { enabled: true },
 
   css: ['~/assets/css/main.css'],
@@ -41,7 +41,25 @@ export default defineNuxtConfig({
   nitro: {
     preset: 'cloudflare-pages',
     compressPublicAssets: true,
+    // Cloudflare Workers support mongodb with nodejs_compat, but the driver
+    // optionally requires AWS/GCP/compression packages that are not installed.
+    // Stub them so Nitro can bundle for the Workers runtime.
+    alias: {
+      '@aws-sdk/credential-providers': '~~/server/stubs/empty.cjs',
+      'aws4': '~~/server/stubs/empty.cjs',
+      'gcp-metadata': '~~/server/stubs/empty.cjs',
+      'snappy': '~~/server/stubs/empty.cjs',
+      'socks': '~~/server/stubs/empty.cjs',
+      'kerberos': '~~/server/stubs/empty.cjs',
+      '@mongodb-js/zstd': '~~/server/stubs/empty.cjs',
+      'mongodb-client-encryption': '~~/server/stubs/empty.cjs',
+    },
+    cloudflare: {
+      deployConfig: true,
+      nodeCompat: true,
+    },
   },
+
 
   vite: {
     server: {
