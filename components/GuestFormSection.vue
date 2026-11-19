@@ -8,15 +8,20 @@ type Wish = {
   createdAt: string
 }
 
+/** Placeholder — API/Mongo sẽ nối lại sau */
+const FORM_ENABLED = false
+
 const wishes = ref<Wish[]>([])
 const name = ref('')
 const guests = ref(1)
 const status = ref<'yes' | 'no' | 'maybe'>('yes')
 const message = ref('')
-const feedback = ref('')
-const feedbackType = ref<'ok' | 'error' | ''>('')
+const feedback = ref(
+  FORM_ENABLED ? '' : 'Tính năng xác nhận & lời chúc sẽ sớm mở — hiện chỉ xem trước giao diện.',
+)
+const feedbackType = ref<'ok' | 'error' | ''>(FORM_ENABLED ? '' : 'ok')
 const submitting = ref(false)
-const loading = ref(true)
+const loading = ref(false)
 
 const options = [
   { value: 'yes', label: 'Tham dự' },
@@ -24,55 +29,9 @@ const options = [
   { value: 'no', label: 'Không tham dự' },
 ] as const
 
-async function loadWishes() {
-  loading.value = true
-  try {
-    wishes.value = await $fetch<Wish[]>('/api/wishes')
-  } catch {
-    wishes.value = []
-  } finally {
-    loading.value = false
-  }
-}
-
 async function submit() {
-  feedback.value = ''
-  feedbackType.value = ''
-  submitting.value = true
-  try {
-    const created = await $fetch<Wish & { guests: number; status: string }>('/api/guest', {
-      method: 'POST',
-      body: {
-        name: name.value,
-        guests: guests.value,
-        status: status.value,
-        message: message.value,
-      },
-    })
-    wishes.value = [
-      {
-        id: created.id,
-        name: created.name,
-        message: created.message,
-        createdAt: String(created.createdAt),
-      },
-      ...wishes.value,
-    ]
-    name.value = ''
-    guests.value = 1
-    status.value = 'yes'
-    message.value = ''
-    feedback.value = 'Đã nhận xác nhận và lời chúc của bạn. Cảm ơn nhiều!'
-    feedbackType.value = 'ok'
-  } catch (err: any) {
-    feedback.value = err?.data?.statusMessage || err?.statusMessage || 'Gửi thất bại. Thử lại nhé.'
-    feedbackType.value = 'error'
-  } finally {
-    submitting.value = false
-  }
+  if (!FORM_ENABLED) return
 }
-
-onMounted(loadWishes)
 </script>
 
 <template>
@@ -86,48 +45,55 @@ onMounted(loadWishes)
         </p>
 
         <form class="form" @submit.prevent="submit">
-          <div class="field">
-            <label for="guest-name">Họ và tên</label>
-            <input
-              id="guest-name"
-              v-model="name"
-              type="text"
-              maxlength="80"
-              required
-              autocomplete="name"
-            />
-          </div>
-
-          <div class="row">
+          <fieldset :disabled="!FORM_ENABLED">
             <div class="field">
-              <label for="guest-count">Số khách</label>
+              <label for="guest-name">Họ và tên</label>
               <input
-                id="guest-count"
-                v-model.number="guests"
-                type="number"
-                min="1"
-                max="10"
-                required
+                id="guest-name"
+                v-model="name"
+                type="text"
+                maxlength="80"
+                :required="FORM_ENABLED"
+                autocomplete="name"
               />
             </div>
-            <div class="field">
-              <label for="guest-status">Trạng thái</label>
-              <select id="guest-status" v-model="status" required>
-                <option v-for="opt in options" :key="opt.value" :value="opt.value">
-                  {{ opt.label }}
-                </option>
-              </select>
+
+            <div class="row">
+              <div class="field">
+                <label for="guest-count">Số khách</label>
+                <input
+                  id="guest-count"
+                  v-model.number="guests"
+                  type="number"
+                  min="1"
+                  max="10"
+                  :required="FORM_ENABLED"
+                />
+              </div>
+              <div class="field">
+                <label for="guest-status">Trạng thái</label>
+                <select id="guest-status" v-model="status" :required="FORM_ENABLED">
+                  <option v-for="opt in options" :key="opt.value" :value="opt.value">
+                    {{ opt.label }}
+                  </option>
+                </select>
+              </div>
             </div>
-          </div>
 
-          <div class="field">
-            <label for="guest-message">Lời chúc</label>
-            <textarea id="guest-message" v-model="message" maxlength="500" required />
-          </div>
+            <div class="field">
+              <label for="guest-message">Lời chúc</label>
+              <textarea
+                id="guest-message"
+                v-model="message"
+                maxlength="500"
+                :required="FORM_ENABLED"
+              />
+            </div>
 
-          <button class="btn btn-primary" type="submit" :disabled="submitting">
-            {{ submitting ? 'Đang gửi…' : 'Gửi xác nhận' }}
-          </button>
+            <button class="btn btn-primary" type="submit" :disabled="!FORM_ENABLED || submitting">
+              {{ FORM_ENABLED ? (submitting ? 'Đang gửi…' : 'Gửi xác nhận') : 'Sắp mở' }}
+            </button>
+          </fieldset>
           <p class="form-status" :class="feedbackType">{{ feedback }}</p>
         </form>
       </div>
@@ -147,6 +113,19 @@ onMounted(loadWishes)
   margin-top: 1.5rem;
   display: grid;
   gap: 1rem;
+}
+
+.form fieldset {
+  border: 0;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 1rem;
+  min-inline-size: 0;
+}
+
+.form fieldset:disabled {
+  opacity: 0.72;
 }
 
 .row {

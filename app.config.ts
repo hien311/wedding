@@ -5,29 +5,29 @@ export default defineAppConfig({
     groomFull: 'Phùng Gia Hiến',
     brideFull: 'Trần Thanh Hiền',
     tagline: 'Trân trọng kính mời',
-    /** Ngày hiện ở hero */
+    /** Ngày hiện ở hero — ưu tiên ngày cơm thân mật */
     dateLabel: 'Chủ Nhật · 13.12.2026',
-    timeLabel: '09:00',
+    timeLabel: '10:00',
     countdowns: [
       {
         id: 'day-13',
         title: 'Bữa cơm thân mật',
-        at: '2026-12-13T09:00:00+07:00',
+        at: '2026-12-13T10:00:00+07:00',
         dateLabel: 'Chủ Nhật · 13.12.2026',
-        timeLabel: '09:00',
+        timeLabel: '10:00',
       },
       {
         id: 'day-14',
         title: 'Lễ thành hôn',
-        at: '2026-12-14T11:00:00+07:00',
+        at: '2026-12-14T10:30:00+07:00',
         dateLabel: 'Thứ Hai · 14.12.2026',
-        timeLabel: '11:00',
+        timeLabel: '10:30',
       },
     ],
     events: [
       {
         title: 'Bữa cơm thân mật',
-        time: '09:00',
+        time: '10:00',
         date: 'Chủ Nhật · 13.12.2026',
         day: '13',
         month: '12',
@@ -36,7 +36,7 @@ export default defineAppConfig({
       },
       {
         title: 'Lễ thành hôn',
-        time: '11:00',
+        time: '10:30',
         date: 'Thứ Hai · 14.12.2026',
         day: '14',
         month: '12',
@@ -57,7 +57,7 @@ export default defineAppConfig({
       },
     },
     venue: 'Tư gia nhà trai',
-    address: 'Khu 1, xã Hạ Hòa, tỉnh Phú Thọ',
+    address: 'Thôn 11, xã Hạ Hòa, tỉnh Phú Thọ (Khu 1 Gia Điền cũ)',
     mapUrl: 'https://maps.app.goo.gl/HXQeqMWN5FqVArwZA',
     mapEmbedUrl:
       'https://maps.google.com/maps?q=21.605435,105.060674&z=16&output=embed',

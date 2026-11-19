@@ -4,6 +4,7 @@
 .data
 .nitro
 .cache
+.wrangler
 dist
 
 # Node

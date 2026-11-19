@@ -53,8 +53,8 @@ onBeforeUnmount(() => window.removeEventListener('keydown', onKey))
 
 <template>
   <div class="wish-frame-wrap reveal">
-    <h3>Thư từ bầu trời</h3>
-    <p class="hint">Chạm chim bồ câu đang bay để mở một lời chúc ngẫu nhiên.</p>
+    <h3>Những cánh thư</h3>
+    <p class="hint">Chạm chim bồ câu để mở một lời chúc ngẫu nhiên.</p>
 
     <div class="frame" role="group" aria-label="Khung thư lời chúc pixel">
       <div class="mat">
@@ -62,7 +62,7 @@ onBeforeUnmount(() => window.removeEventListener('keydown', onKey))
           <div class="scanlines" aria-hidden="true" />
           <p v-if="loading" class="state">Đang tải lời chúc…</p>
           <p v-else-if="!wishes.length" class="state">
-            Chưa có lời chúc — hãy gửi lời đầu tiên bên trái nhé.
+            Lời chúc sẽ sớm mở — khung thư đang chờ những cánh thư đầu tiên.
           </p>
 
           <button

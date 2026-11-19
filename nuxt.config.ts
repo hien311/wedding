@@ -3,6 +3,11 @@ export default defineNuxtConfig({
   compatibilityDate: '2024-11-01',
   devtools: { enabled: true },
 
+  // Tránh lỗi Vite resolve "#app-manifest" lúc cold start (Nuxt 3.21)
+  experimental: {
+    appManifest: false,
+  },
+
   css: ['~/assets/css/main.css'],
 
   app: {
@@ -32,14 +37,9 @@ export default defineNuxtConfig({
   },
 
   runtimeConfig: {
-    mongodbUri: process.env.MONGODB_URI || '',
     public: {
       siteUrl: process.env.NUXT_PUBLIC_SITE_URL || 'http://localhost:3000',
     },
-  },
-
-  nitro: {
-    compressPublicAssets: true,
   },
 
   vite: {
@@ -57,4 +57,3 @@ export default defineNuxtConfig({
 
   ignore: ['drive-download-*/**'],
 })
-
